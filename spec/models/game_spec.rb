@@ -83,14 +83,17 @@ RSpec.describe Game, type: :model do
   context 'game condition' do
     it 'correct .current_game_question' do
       game_w_questions.current_level = 1
-      expect(game_w_questions.current_game_question.level).to eq(1)
+      game_w_questions.game_questions.order(:current_level)
+      expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions[1])
     end
 
     it 'correct .previous_game_question' do
       expect(game_w_questions.previous_game_question).to eq(nil)
 
+      game_w_questions.game_questions.order(:current_level)
+
       game_w_questions.current_level = 2
-      expect(game_w_questions.previous_game_question.level).to eq(1)
+      expect(game_w_questions.previous_game_question).to eq(game_w_questions.game_questions[1])
     end
 
     it 'correct .previous_level' do
