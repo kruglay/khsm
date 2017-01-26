@@ -102,6 +102,55 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  context '.answer_current_question!' do
+    before(:each) do
+
+    end
+
+    it 'return false if time end' do
+      game_w_questions.current_level = 2
+      game_w_questions.created_at = Time.now - 3600
+      # letter 'd' always right
+      expect(game_w_questions.answer_current_question!('d')).to be_falsey
+    end
+
+    it 'return false if game finished' do
+      game_w_questions.current_level = 2
+      game_w_questions.finished_at = Time.now - 10
+      expect(game_w_questions.answer_current_question!('d')).to be_falsey
+    end
+
+    it 'answer incorrect' do
+      game_w_questions.current_level = 5
+      user_balance_before = user.balance
+      game_w_questions.answer_current_question!('a')
+
+      expect(game_w_questions.prize).to eq(Game::PRIZES[Game::FIREPROOF_LEVELS[0]])
+      expect(game_w_questions.finished_at).to be_between(Time.now - 10, Time.now)
+      expect(game_w_questions.is_failed).to be_truthy
+      expect(user.balance).to eq(user_balance_before + game_w_questions.prize)
+    end
+
+    it 'last correct answer' do
+      last_level = Question::QUESTION_LEVELS.max
+      game_w_questions.current_level = last_level
+      user_balance_before = user.balance
+      game_w_questions.answer_current_question!('d')
+
+      expect(game_w_questions.prize).to eq(Game::PRIZES[last_level])
+      expect(game_w_questions.finished_at).to be_between(Time.now - 10, Time.now)
+      expect(game_w_questions.is_failed).to be_falsey
+      expect(user.balance).to eq(user_balance_before + game_w_questions.prize)
+    end
+
+    it 'correct answer' do
+      game_w_questions.current_level = 2
+      game_w_questions.answer_current_question!('d')
+
+      expect(game_w_questions.current_level).to eq(3)
+    end
+  end
+
   context '.status' do
     # перед каждым тестом "завершаем игру"
     before(:each) do
