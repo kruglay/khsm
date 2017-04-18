@@ -5,9 +5,9 @@
 #  id            :integer          not null, primary key
 #  user_id       :integer
 #  finished_at   :datetime
-#  current_level :integer          default("0"), not null
+#  current_level :integer          default(0), not null
 #  is_failed     :boolean
-#  prize         :integer          default("0"), not null
+#  prize         :integer          default(0), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

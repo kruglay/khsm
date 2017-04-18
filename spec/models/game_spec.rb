@@ -103,10 +103,6 @@ RSpec.describe Game, type: :model do
   end
 
   context '.answer_current_question!' do
-    before(:each) do
-
-    end
-
     it 'return false if time end' do
       game_w_questions.current_level = 2
       game_w_questions.created_at = Time.now - 3600
@@ -129,6 +125,7 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.finished_at).to be_between(Time.now - 10, Time.now)
       expect(game_w_questions.is_failed).to be_truthy
       expect(user.balance).to eq(user_balance_before + game_w_questions.prize)
+      expect(game_w_questions.status).to eq :fail
     end
 
     it 'last correct answer' do
@@ -141,6 +138,7 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.finished_at).to be_between(Time.now - 10, Time.now)
       expect(game_w_questions.is_failed).to be_falsey
       expect(user.balance).to eq(user_balance_before + game_w_questions.prize)
+      expect(game_w_questions.status).to eq :won
     end
 
     it 'correct answer' do
@@ -148,6 +146,7 @@ RSpec.describe Game, type: :model do
       game_w_questions.answer_current_question!('d')
 
       expect(game_w_questions.current_level).to eq(3)
+      expect(game_w_questions.status).to eq :in_progress
     end
   end
 

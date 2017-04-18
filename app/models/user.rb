@@ -5,8 +5,8 @@
 #  id                     :integer          not null, primary key
 #  name                   :string           not null
 #  email                  :string           default(""), not null
-#  is_admin               :boolean          default("f"), not null
-#  balance                :integer          default("0"), not null
+#  is_admin               :boolean          default(FALSE), not null
+#  balance                :integer          default(0), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  encrypted_password     :string           default(""), not null
