@@ -108,12 +108,14 @@ RSpec.describe Game, type: :model do
       game_w_questions.created_at = Time.now - 3600
       # letter 'd' always right
       expect(game_w_questions.answer_current_question!('d')).to be_falsey
+      expect(game_w_questions.status).to eq :timeout
     end
 
     it 'return false if game finished' do
       game_w_questions.current_level = 2
       game_w_questions.finished_at = Time.now - 10
       expect(game_w_questions.answer_current_question!('d')).to be_falsey
+      expect(game_w_questions.status).to eq :money
     end
 
     it 'answer incorrect' do
