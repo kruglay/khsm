@@ -117,16 +117,16 @@ RSpec.describe GamesController, type: :controller do
       expect(game_w_questions.current_game_question.help_hash[:friend_call]).not_to be
       expect(game_w_questions.audience_help_used).to be_falsey
 
+      allow(GameHelpGenerator).to receive(:friend_call) {'Вася считает, что это вариант B'}
       # фигачим запрос в контроллен с нужным типом
       put :help, id: game_w_questions.id, help_type: :friend_call
       game = assigns(:game)
 
       # проверяем, что игра не закончилась, что флажок установился, и подсказка записалась
       fc = game.current_game_question.help_hash[:friend_call]
-      expect(game.finished?).to be_falsey
       expect(game.friend_call_used).to be_truthy
       expect(fc).to be
-      expect(fc).to match(/^(#{I18n.t('game_help.friends').join('|')})/).and match(/(A|B|C|D)\z/)
+      expect(fc).to eq 'Вася считает, что это вариант B'
       expect(response).to redirect_to(game_path(game))
     end
   end
